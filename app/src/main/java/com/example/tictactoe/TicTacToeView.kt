@@ -68,8 +68,28 @@ class TicTacToeView @JvmOverloads constructor(
         paint.strokeWidth = 5F
         paint.color = Color.BLACK
         paint.style = Paint.Style.STROKE
-        boardList.forEach {
-            canvas?.drawRect(it, paint)
+        canvas?.let { it ->
+            drawBoard(it)
+            boardList.forEachIndexed { index, board ->
+                when (boardStateList[index]) {
+                    State.CIRCLE -> drawCircle(canvas, board)
+                }
+            }
         }
+    }
+
+    private fun drawBoard(canvas: Canvas) {
+        boardList.forEach {
+            canvas.drawRect(it, paint)
+        }
+    }
+
+    private fun drawCircle(canvas: Canvas, block: Rect) {
+        canvas.drawCircle(
+            block.exactCenterX(),
+            block.exactCenterY(),
+            boardSize.toFloat() / 2,
+            paint
+        )
     }
 }
