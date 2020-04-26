@@ -1,4 +1,4 @@
-package com.example.tictactoe
+package com.example.tictactoe.customview
 
 import android.content.Context
 import android.graphics.Canvas
@@ -10,6 +10,10 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.example.tictactoe.customview.constant.State
+import com.example.tictactoe.customview.instancestate.TicTacToeInstanceState
+import com.example.tictactoe.toBoolean
+import com.example.tictactoe.toInt
 
 class TicTacToeView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -139,7 +143,10 @@ class TicTacToeView @JvmOverloads constructor(
 
     override fun onSaveInstanceState(): Parcelable? {
         val instanceState = super.onSaveInstanceState()
-        val state = TicTacToeInstanceState(instanceState)
+        val state =
+            TicTacToeInstanceState(
+                instanceState
+            )
         state.boardStateList.addAll(this.boardStateList)
         state.userOddTouchFlag = this.userOddTouchFlag.toInt()
         return state

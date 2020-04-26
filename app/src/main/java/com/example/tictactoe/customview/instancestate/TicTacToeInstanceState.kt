@@ -1,4 +1,4 @@
-package com.example.tictactoe
+package com.example.tictactoe.customview.instancestate
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -29,7 +29,9 @@ class TicTacToeInstanceState : BaseSavedState {
 
     companion object CREATOR : Parcelable.Creator<TicTacToeInstanceState> {
         override fun createFromParcel(parcel: Parcel): TicTacToeInstanceState {
-            return TicTacToeInstanceState(parcel)
+            return TicTacToeInstanceState(
+                parcel
+            )
         }
 
         override fun newArray(size: Int): Array<TicTacToeInstanceState?> {
