@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Path
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -30,6 +31,7 @@ class TicTacToeView @JvmOverloads constructor(
     }
 
     init {
+        isSaveEnabled = true
         for (index in 1..9) {
             boardStateList.add(State.BLANK)
         }
@@ -133,6 +135,25 @@ class TicTacToeView @JvmOverloads constructor(
             invalidate()
         }
         return true
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        val instanceState = super.onSaveInstanceState()
+        val state = TicTacToeInstanceState(instanceState)
+        state.boardStateList.addAll(this.boardStateList)
+        state.userOddTouchFlag = this.userOddTouchFlag.toInt()
+        return state
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        state?.let {
+            val instanceState = it as TicTacToeInstanceState
+            super.onRestoreInstanceState(instanceState.superState)
+            this.boardStateList.clear()
+            this.boardStateList.addAll(instanceState.boardStateList)
+            this.userOddTouchFlag = instanceState.userOddTouchFlag.toBoolean()
+            invalidate()
+        }
     }
 
     companion object {
