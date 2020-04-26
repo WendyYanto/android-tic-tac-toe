@@ -1,6 +1,9 @@
 package com.example.tictactoe
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
@@ -9,6 +12,9 @@ class TicTacToeView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
+    private val paint by lazy {
+        Paint(Paint.ANTI_ALIAS_FLAG)
+    }
     private var boardSize = 300
     private val boardList by lazy {
         mutableListOf<Rect>()
@@ -54,6 +60,16 @@ class TicTacToeView @JvmOverloads constructor(
             if (index % 3 == 0) {
                 row = index / 3
             }
+        }
+    }
+
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        paint.strokeWidth = 5F
+        paint.color = Color.BLACK
+        paint.style = Paint.Style.STROKE
+        boardList.forEach {
+            canvas?.drawRect(it, paint)
         }
     }
 }
