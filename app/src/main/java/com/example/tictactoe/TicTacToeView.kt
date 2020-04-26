@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
 
@@ -12,15 +13,18 @@ class TicTacToeView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private val paint by lazy {
-        Paint(Paint.ANTI_ALIAS_FLAG)
-    }
     private var boardSize = 300
     private val boardList by lazy {
         mutableListOf<Rect>()
     }
     private val boardStateList by lazy {
         mutableListOf<String>()
+    }
+    private val paint by lazy {
+        Paint(Paint.ANTI_ALIAS_FLAG)
+    }
+    private val path by lazy {
+        Path()
     }
 
     init {
@@ -73,6 +77,7 @@ class TicTacToeView @JvmOverloads constructor(
             boardList.forEachIndexed { index, board ->
                 when (boardStateList[index]) {
                     State.CIRCLE -> drawCircle(canvas, board)
+                    State.CROSS -> drawCross(canvas, board)
                 }
             }
         }
@@ -91,5 +96,13 @@ class TicTacToeView @JvmOverloads constructor(
             boardSize.toFloat() / 2,
             paint
         )
+    }
+
+    private fun drawCross(canvas: Canvas, block: Rect) {
+        path.moveTo(block.left.toFloat(), block.top.toFloat())
+        path.lineTo(block.right.toFloat(), block.bottom.toFloat())
+        path.moveTo(block.right.toFloat(), block.top.toFloat())
+        path.lineTo(block.left.toFloat(), block.bottom.toFloat())
+        canvas.drawPath(path, paint)
     }
 }
