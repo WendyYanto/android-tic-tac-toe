@@ -13,6 +13,15 @@ class TicTacToeView @JvmOverloads constructor(
     private val boardList by lazy {
         mutableListOf<Rect>()
     }
+    private val boardStateList by lazy {
+        mutableListOf<String>()
+    }
+
+    init {
+        for (index in 1..9) {
+            boardStateList.add(State.BLANK)
+        }
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
