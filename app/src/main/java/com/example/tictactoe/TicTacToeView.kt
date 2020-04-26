@@ -15,6 +15,7 @@ class TicTacToeView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private var boardSize = 300
+    private var userOddTouchFlag = false
     private val boardList by lazy {
         mutableListOf<Rect>()
     }
@@ -110,14 +111,27 @@ class TicTacToeView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         event?.let { motionEvent ->
             when (motionEvent.action) {
-                MotionEvent.ACTION_UP -> updateBoardState()
+                MotionEvent.ACTION_UP -> updateBoardState(event)
                 else -> true
             }
         }
         return true
     }
 
-    private fun updateBoardState(): Boolean {
+    private fun updateBoardState(event: MotionEvent): Boolean {
+        boardList.asSequence().find { rect ->
+            rect.contains(event.x.toInt(), event.y.toInt())
+        }?.apply {
+            val index = boardList.indexOf(this)
+            if (boardStateList[index] != State.BLANK) return true
+            if (userOddTouchFlag) {
+                boardStateList[index] = State.CROSS
+            } else {
+                boardStateList[index] = State.CIRCLE
+            }
+            userOddTouchFlag = userOddTouchFlag.not()
+            invalidate()
+        }
         return true
     }
 }
