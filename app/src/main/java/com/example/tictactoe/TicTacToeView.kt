@@ -71,7 +71,7 @@ class TicTacToeView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        paint.strokeWidth = 5F
+        paint.strokeWidth = 10F
         paint.color = Color.BLACK
         paint.style = Paint.Style.STROKE
         canvas?.let { it ->
@@ -95,16 +95,16 @@ class TicTacToeView @JvmOverloads constructor(
         canvas.drawCircle(
             block.exactCenterX(),
             block.exactCenterY(),
-            boardSize.toFloat() / 2,
+            boardSize.toFloat() / 3,
             paint
         )
     }
 
     private fun drawCross(canvas: Canvas, block: Rect) {
-        path.moveTo(block.left.toFloat(), block.top.toFloat())
-        path.lineTo(block.right.toFloat(), block.bottom.toFloat())
-        path.moveTo(block.right.toFloat(), block.top.toFloat())
-        path.lineTo(block.left.toFloat(), block.bottom.toFloat())
+        path.moveTo(block.left.toFloat() + CROSS_OFFSET, block.top.toFloat() + CROSS_OFFSET)
+        path.lineTo(block.right.toFloat() - CROSS_OFFSET, block.bottom.toFloat() - CROSS_OFFSET)
+        path.moveTo(block.right.toFloat() - CROSS_OFFSET, block.top.toFloat() + CROSS_OFFSET)
+        path.lineTo(block.left.toFloat() + CROSS_OFFSET, block.bottom.toFloat() - CROSS_OFFSET)
         canvas.drawPath(path, paint)
     }
 
@@ -133,5 +133,9 @@ class TicTacToeView @JvmOverloads constructor(
             invalidate()
         }
         return true
+    }
+
+    companion object {
+        private const val CROSS_OFFSET = 75
     }
 }
