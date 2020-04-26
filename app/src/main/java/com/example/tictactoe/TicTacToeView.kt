@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Path
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 
 class TicTacToeView @JvmOverloads constructor(
@@ -104,5 +105,19 @@ class TicTacToeView @JvmOverloads constructor(
         path.moveTo(block.right.toFloat(), block.top.toFloat())
         path.lineTo(block.left.toFloat(), block.bottom.toFloat())
         canvas.drawPath(path, paint)
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        event?.let { motionEvent ->
+            when (motionEvent.action) {
+                MotionEvent.ACTION_UP -> updateBoardState()
+                else -> true
+            }
+        }
+        return true
+    }
+
+    private fun updateBoardState(): Boolean {
+        return true
     }
 }
