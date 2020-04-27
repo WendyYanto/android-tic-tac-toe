@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Path
+import android.os.Handler
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -47,6 +48,10 @@ class TicTacToeView @JvmOverloads constructor(
     init {
         isSaveEnabled = true
         setupPaint()
+        initBoardState()
+    }
+
+    private fun initBoardState() {
         for (index in 1..9) {
             boardStateList.add(State.BLANK)
         }
@@ -192,8 +197,26 @@ class TicTacToeView @JvmOverloads constructor(
             checkBlock(state, arrayListOf(0, 4, 8)) or
             checkBlock(state, arrayListOf(2, 4, 6))
         ) {
-            Toast.makeText(this.context, "$state Won", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this.context,
+                "$state Won, Resetting in ${RESET_TIME / 1000} seconds",
+                Toast.LENGTH_SHORT
+            ).show()
+            Handler().postDelayed({
+                reset()
+                invalidate()
+            }, RESET_TIME)
         }
+    }
+
+    private fun reset() {
+        boardStateList.clear()
+        playerOneChoice.clear()
+        playerTwoChoice.clear()
+        winnerChoice.clear()
+        path.reset()
+        userOddTouchFlag = false
+        initBoardState()
     }
 
     private fun checkBlock(state: String, possibleSolutions: List<Int>): Boolean {
@@ -241,5 +264,6 @@ class TicTacToeView @JvmOverloads constructor(
     companion object {
         private const val CROSS_OFFSET = 75
         private const val DEFAULT_STROKE_WIDTH = 4F
+        private const val RESET_TIME = 2000L
     }
 }
