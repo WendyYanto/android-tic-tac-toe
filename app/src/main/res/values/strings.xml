@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TicTacToe</string>
+    <string name="win_message">%s Won, Resetting in %d seconds</string>
 </resources>

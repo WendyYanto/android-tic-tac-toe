@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import com.example.tictactoe.R
 import com.example.tictactoe.customview.constant.State
 import com.example.tictactoe.customview.instancestate.TicTacToeInstanceState
 import com.example.tictactoe.toBoolean
@@ -181,25 +182,17 @@ class TicTacToeView @JvmOverloads constructor(
     }
 
     private fun findWinner() {
-        val state: String = if (userOddTouchFlag) {
+        val state = if (userOddTouchFlag) {
             if (playerTwoChoice.size < 3) return
             State.CROSS
         } else {
             if (playerOneChoice.size < 3) return
             State.CIRCLE
         }
-        if (checkBlock(state, arrayListOf(0, 1, 2)) or
-            checkBlock(state, arrayListOf(3, 4, 5)) or
-            checkBlock(state, arrayListOf(6, 7, 8)) or
-            checkBlock(state, arrayListOf(0, 3, 6)) or
-            checkBlock(state, arrayListOf(1, 4, 7)) or
-            checkBlock(state, arrayListOf(2, 5, 8)) or
-            checkBlock(state, arrayListOf(0, 4, 8)) or
-            checkBlock(state, arrayListOf(2, 4, 6))
-        ) {
+        if (isWin(state)) {
             Toast.makeText(
                 this.context,
-                "$state Won, Resetting in ${RESET_TIME / 1000} seconds",
+                this.context.getString(R.string.win_message, state, RESET_TIME / 1000),
                 Toast.LENGTH_SHORT
             ).show()
             Handler().postDelayed({
@@ -207,6 +200,17 @@ class TicTacToeView @JvmOverloads constructor(
                 invalidate()
             }, RESET_TIME)
         }
+    }
+
+    private fun isWin(state: String): Boolean {
+        return checkBlock(state, arrayListOf(0, 1, 2)) or
+                checkBlock(state, arrayListOf(3, 4, 5)) or
+                checkBlock(state, arrayListOf(6, 7, 8)) or
+                checkBlock(state, arrayListOf(0, 3, 6)) or
+                checkBlock(state, arrayListOf(1, 4, 7)) or
+                checkBlock(state, arrayListOf(2, 5, 8)) or
+                checkBlock(state, arrayListOf(0, 4, 8)) or
+                checkBlock(state, arrayListOf(2, 4, 6))
     }
 
     private fun reset() {
