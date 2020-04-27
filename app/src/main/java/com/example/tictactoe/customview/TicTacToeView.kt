@@ -10,6 +10,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import com.example.tictactoe.customview.constant.State
 import com.example.tictactoe.customview.instancestate.TicTacToeInstanceState
 import com.example.tictactoe.toBoolean
@@ -26,6 +27,15 @@ class TicTacToeView @JvmOverloads constructor(
     }
     private val boardStateList by lazy {
         mutableListOf<String>()
+    }
+    private val playerOneChoice by lazy {
+        mutableListOf<Int>()
+    }
+    private val playerTwoChoice by lazy {
+        mutableListOf<Int>()
+    }
+    private val winnerChoice by lazy {
+        mutableListOf<Int>()
     }
     private val paint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG)
@@ -98,6 +108,9 @@ class TicTacToeView @JvmOverloads constructor(
                     State.CROSS -> drawCross(canvas, board)
                 }
             }
+            if (winnerChoice.isNotEmpty()) {
+                drawWinnerLine(it)
+            }
         }
     }
 
@@ -124,6 +137,14 @@ class TicTacToeView @JvmOverloads constructor(
         canvas.drawPath(path, paint)
     }
 
+    private fun drawWinnerLine(canvas: Canvas) {
+        val start = boardList[winnerChoice.first()]
+        val end = boardList[winnerChoice.last()]
+        path.moveTo(start.exactCenterX(), start.exactCenterY())
+        path.lineTo(end.exactCenterX(), end.exactCenterY())
+        canvas.drawPath(path, paint)
+    }
+
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         event?.let { motionEvent ->
             when (motionEvent.action) {
@@ -141,14 +162,58 @@ class TicTacToeView @JvmOverloads constructor(
             val index = boardList.indexOf(this)
             if (boardStateList[index] != State.BLANK) return true
             if (userOddTouchFlag) {
+                playerTwoChoice.add(index)
                 boardStateList[index] = State.CROSS
             } else {
+                playerOneChoice.add(index)
                 boardStateList[index] = State.CIRCLE
             }
+            findWinner()
             userOddTouchFlag = userOddTouchFlag.not()
             invalidate()
         }
         return true
+    }
+
+    private fun findWinner() {
+        val state: String = if (userOddTouchFlag) {
+            if (playerTwoChoice.size < 3) return
+            State.CROSS
+        } else {
+            if (playerOneChoice.size < 3) return
+            State.CIRCLE
+        }
+        if (checkBlock(state, arrayListOf(0, 1, 2)) or
+            checkBlock(state, arrayListOf(3, 4, 5)) or
+            checkBlock(state, arrayListOf(6, 7, 8)) or
+            checkBlock(state, arrayListOf(0, 3, 6)) or
+            checkBlock(state, arrayListOf(1, 4, 7)) or
+            checkBlock(state, arrayListOf(2, 5, 8)) or
+            checkBlock(state, arrayListOf(0, 4, 8)) or
+            checkBlock(state, arrayListOf(2, 4, 6))
+        ) {
+            Toast.makeText(this.context, "$state Won", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun checkBlock(state: String, possibleSolutions: List<Int>): Boolean {
+        val response = when (state) {
+            State.CROSS -> {
+                possibleSolutions.all {
+                    playerTwoChoice.contains(it)
+                }
+            }
+            State.CIRCLE -> {
+                possibleSolutions.all {
+                    playerOneChoice.contains(it)
+                }
+            }
+            else -> false
+        }
+        if (response) {
+            winnerChoice.addAll(possibleSolutions)
+        }
+        return response
     }
 
     override fun onSaveInstanceState(): Parcelable? {
