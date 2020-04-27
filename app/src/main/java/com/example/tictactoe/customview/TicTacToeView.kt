@@ -36,9 +36,22 @@ class TicTacToeView @JvmOverloads constructor(
 
     init {
         isSaveEnabled = true
+        setupPaint()
         for (index in 1..9) {
             boardStateList.add(State.BLANK)
         }
+    }
+
+    private fun setupPaint() {
+        paint.color = Color.BLACK
+        paint.style = Paint.Style.STROKE
+        setupStrokeWidth()
+    }
+
+    private fun setupStrokeWidth() {
+        val displayMetrics = context.resources.displayMetrics
+        val density = displayMetrics.density
+        paint.strokeWidth = density * DEFAULT_STROKE_WIDTH
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -77,9 +90,6 @@ class TicTacToeView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        paint.strokeWidth = 10F
-        paint.color = Color.BLACK
-        paint.style = Paint.Style.STROKE
         canvas?.let { it ->
             drawBoard(it)
             boardList.forEachIndexed { index, board ->
@@ -165,5 +175,6 @@ class TicTacToeView @JvmOverloads constructor(
 
     companion object {
         private const val CROSS_OFFSET = 75
+        private const val DEFAULT_STROKE_WIDTH = 4F
     }
 }
