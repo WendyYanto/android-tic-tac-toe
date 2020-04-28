@@ -189,17 +189,34 @@ class TicTacToeView @JvmOverloads constructor(
             if (playerOneChoice.size < 3) return
             State.CIRCLE
         }
-        if (isWin(state)) {
-            Toast.makeText(
-                this.context,
-                this.context.getString(R.string.win_message, state, RESET_TIME / 1000),
-                Toast.LENGTH_SHORT
-            ).show()
-            Handler().postDelayed({
-                reset()
-                invalidate()
-            }, RESET_TIME)
+        when {
+            isWin(state) -> {
+                Toast.makeText(
+                    this.context,
+                    this.context.getString(R.string.win_message, state, RESET_TIME / 1000),
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            }
+            isDraw() -> {
+                Toast.makeText(
+                    this.context,
+                    this.context.getString(R.string.draw_message, RESET_TIME / 1000),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            else -> {
+                return
+            }
         }
+        Handler().postDelayed({
+            reset()
+            invalidate()
+        }, RESET_TIME)
+    }
+
+    private fun isDraw(): Boolean {
+        return playerOneChoice.size + playerTwoChoice.size == 9
     }
 
     private fun isWin(state: String): Boolean {
