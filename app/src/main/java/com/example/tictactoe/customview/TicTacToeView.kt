@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.StringRes
 import com.example.tictactoe.R
 import com.example.tictactoe.customview.constant.State
 import com.example.tictactoe.customview.instancestate.TicTacToeInstanceState
@@ -189,25 +190,11 @@ class TicTacToeView @JvmOverloads constructor(
             if (playerOneChoice.size < 3) return
             State.CIRCLE
         }
+        val resetSeconds = (RESET_TIME / 1000).toString()
         when {
-            isWin(state) -> {
-                Toast.makeText(
-                    this.context,
-                    this.context.getString(R.string.win_message, state, RESET_TIME / 1000),
-                    Toast.LENGTH_SHORT
-                ).show()
-
-            }
-            isDraw() -> {
-                Toast.makeText(
-                    this.context,
-                    this.context.getString(R.string.draw_message, RESET_TIME / 1000),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            else -> {
-                return
-            }
+            isWin(state) -> showToast(R.string.win_message, state, resetSeconds)
+            isDraw() -> showToast(R.string.draw_message, resetSeconds)
+            else -> return
         }
         Handler().postDelayed({
             reset()
@@ -217,6 +204,14 @@ class TicTacToeView @JvmOverloads constructor(
 
     private fun isDraw(): Boolean {
         return playerOneChoice.size + playerTwoChoice.size == 9
+    }
+
+    private fun showToast(@StringRes stringId: Int, vararg value: Any) {
+        Toast.makeText(
+            this.context,
+            this.context.getString(stringId, *value),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun isWin(state: String): Boolean {
