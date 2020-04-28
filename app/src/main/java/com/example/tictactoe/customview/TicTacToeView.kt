@@ -190,10 +190,9 @@ class TicTacToeView @JvmOverloads constructor(
             if (playerOneChoice.size < 3) return
             State.CIRCLE
         }
-        val resetSeconds = (RESET_TIME / 1000).toString()
         when {
-            isWin(state) -> showToast(R.string.win_message, state, resetSeconds)
-            isDraw() -> showToast(R.string.draw_message, resetSeconds)
+            isWin(state) -> showToast(R.string.win_message, state, RESET_TIME / 1000)
+            isDraw() -> showToast(R.string.draw_message, RESET_TIME / 1000)
             else -> return
         }
         Handler().postDelayed({
