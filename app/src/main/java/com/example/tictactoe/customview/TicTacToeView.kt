@@ -25,6 +25,7 @@ class TicTacToeView @JvmOverloads constructor(
 
     private var boardSize = 300
     private var userOddTouchFlag = false
+    private var isResetting = false
     private val boardList by lazy {
         mutableListOf<Rect>()
     }
@@ -163,6 +164,7 @@ class TicTacToeView @JvmOverloads constructor(
     }
 
     private fun updateBoardState(event: MotionEvent): Boolean {
+        if (isResetting) return true
         boardList.asSequence().find { rect ->
             rect.contains(event.x.toInt(), event.y.toInt())
         }?.apply {
@@ -195,8 +197,10 @@ class TicTacToeView @JvmOverloads constructor(
             isDraw() -> showToast(R.string.draw_message, RESET_TIME / 1000)
             else -> return
         }
+        isResetting = true
         Handler().postDelayed({
             reset()
+            isResetting = false
             invalidate()
         }, RESET_TIME)
     }
