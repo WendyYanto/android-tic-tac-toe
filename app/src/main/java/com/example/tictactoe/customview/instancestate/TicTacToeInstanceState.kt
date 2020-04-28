@@ -8,18 +8,23 @@ class TicTacToeInstanceState : BaseSavedState {
 
     var boardStateList = mutableListOf<String>()
     var userOddTouchFlag = 0
+    var playerOneChoices = mutableListOf<Int>()
+    var playerTwoChoices = mutableListOf<Int>()
 
     constructor(parcelable: Parcelable?) : super(parcelable)
 
     constructor(parcel: Parcel) : super(parcel) {
         boardStateList.clear()
         parcel.readList(mutableListOf<String>() as List<*>, String::class.java.classLoader)
+        parcel.readList(mutableListOf<Int>() as List<*>, Int::class.java.classLoader)
         userOddTouchFlag = parcel.readInt()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)
         parcel.writeList(boardStateList as List<String>)
+        parcel.writeList(playerOneChoices as List<Int>)
+        parcel.writeList(playerTwoChoices as List<Int>)
         parcel.writeInt(userOddTouchFlag)
     }
 

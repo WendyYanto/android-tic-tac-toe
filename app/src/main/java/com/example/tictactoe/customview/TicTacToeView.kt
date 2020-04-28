@@ -251,6 +251,8 @@ class TicTacToeView @JvmOverloads constructor(
             )
         state.boardStateList.addAll(this.boardStateList)
         state.userOddTouchFlag = this.userOddTouchFlag.toInt()
+        state.playerOneChoices.addAll(this.playerOneChoice)
+        state.playerTwoChoices.addAll(this.playerTwoChoice)
         return state
     }
 
@@ -260,6 +262,8 @@ class TicTacToeView @JvmOverloads constructor(
             super.onRestoreInstanceState(instanceState.superState)
             this.boardStateList.clear()
             this.boardStateList.addAll(instanceState.boardStateList)
+            this.playerOneChoice.addAll(instanceState.playerOneChoices)
+            this.playerTwoChoice.addAll(instanceState.playerTwoChoices)
             this.userOddTouchFlag = instanceState.userOddTouchFlag.toBoolean()
             invalidate()
         }
