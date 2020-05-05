@@ -1,4 +1,4 @@
-package com.example.tictactoe.customview
+package dev.wendyyanto.tictactoe.customview
 
 import android.content.Context
 import android.graphics.Canvas
@@ -13,15 +13,15 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
-import com.example.tictactoe.R
-import com.example.tictactoe.customview.constant.State
-import com.example.tictactoe.customview.instancestate.TicTacToeInstanceState
-import com.example.tictactoe.toBoolean
-import com.example.tictactoe.toInt
+import dev.wendyyanto.tictactoe.R
+import dev.wendyyanto.tictactoe.customview.constant.State
+import dev.wendyyanto.tictactoe.customview.instancestate.TicTacToeInstanceState
+import dev.wendyyanto.tictactoe.toBoolean
+import dev.wendyyanto.tictactoe.toInt
 
 class TicTacToeView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+    context: Context, attrs: AttributeSet? = null
+) : View(context, attrs) {
 
     private var boardSize = 300
     private var userOddTouchFlag = false
@@ -202,7 +202,9 @@ class TicTacToeView @JvmOverloads constructor(
             reset()
             isResetting = false
             invalidate()
-        }, RESET_TIME)
+        },
+            RESET_TIME
+        )
     }
 
     private fun isDraw(): Boolean {
